@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Function Simulator</title>
+<link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+<body>
+	<div style="padding-left: 16px">
+		<h1>Function Simulator</h1>
+	</div>
+
+	<div class="tab">
+		<button class="tablinks" onclick="openOption(event, 'Create')">Create</button>
+		<button class="tablinks" onclick="openOption(event, 'Manage')">Manage</button>
+	</div>
+
+	<div id="Create" class="tabcontent">
+		<form action="/create_simulation" method="post" id="newsim">
+			<input type="hidden" id="simJSON" name="sim_cfg" value="">
+		</form>
+		<div id="overlay" >
+			<div id="overlay-text">
+			<p> <label id="overlaytext"></label>
+			<p> <label id="lp1" for="param1">Function Name</label>
+				<input type="text"  id="p1" name="param1" placeholder="Function name" /></p>
+			<p> <label id="lp2" for="param2"></label>
+				<input type="hidden" id="p2" name="param2" min="-999" max="999" step="0.1" value="0.0"></p>
+			<p> <label id="lp3" for="param3"></label>
+				<input type="hidden" id="p3" name="param3" min="-999" max="999" step="0.1" value="0.0"></p>
+			<p> <label id="lp4" for="param4"></label>
+				<input type="hidden" id="p4" name="param4" min="-999" max="999" step="0.1" value="0.0"></p>
+			<p> <label id="lp5" for="param5"></label>
+				<input type="hidden" id="p5" name="param5" min="-999" max="999" step="0.1" value="0.0"></p>
+			<p> <label id="lp6" for="param6"></label>
+				<input type="hidden" id="p6"  name="param6" min="-999" max="999" step="0.1" value="0.0"></p>
+			<p> <label id="lp7" for="param7"></label>
+				<input type="hidden"  id="p7" name="param7" min="-999" max="999" step="0.1" value="0.0"></p>
+			<p> <input type="hidden"  id="p8" name="param8"></p>
+			<p> <button class="submit" onClick="overlayOff()">Add Function</button> </p>
+			</div>
+		</div>
+
+		<div class="container">
+			<div class="fixed">
+				<h3>Create New Simulation</h3>
+				<p>Enter the name of your topic and select functions</p>
+				<p>
+					<b>Topic Name </b><input type="text" id="topicId" placeholder="MyFunction" />
+					<b>Queue </b><input type="text" id="queueId" placeholder="Value" />
+				</p>
+				<button class="accordion">Math</button>
+				<div class="panel">
+					<div class="btn-group">
+						<button onClick="overlayOn('linear')">Linear</button>
+						<button onClick="overlayOn('sine')">Sine</button>
+					</div>
+				</div>
+				<button class="accordion">Misc</button>
+				<div class="panel">
+					<div class="btn-group">
+						<button>Outlier</button>
+						<button>Noise</button>
+					</div>
+				</div>
+				<button class="accordion">Time Series</button>
+				<div class="panel">
+					<div class="btn-group">
+						<button>Time Series</button>
+					</div>
+				</div>
+				<p><input type="submit" form="newsim" value="Create Simulation"></p>
+			</div>
+			<div class="flex-item">
+				<h3>Current simulation</h3>
+				<p>Edit the current simulation before starting</p>
+				<p id="demo"></p>
+			</div>
+		</div>
+	</div>
+
+
+
+	<div id="Manage" class="tabcontent">
+		<h3>Running Simulations</h3>
+		<p>List of Simulations</p>
+	</div>
+
+	<script>
+		var simObj, funObj = "";
+		var funList = [];
+
+		function openOption(evt, optName) {
+			var i, tabcontent, tablinks;
+			tabcontent = document.getElementsByClassName("tabcontent");
+			for (i = 0; i < tabcontent.length; i++) {
+				tabcontent[i].style.display = "none";
+			}
+
+			tablinks = document.getElementsByClassName("tablinks");
+			for (i = 0; i < tablinks.length; i++) {
+				tablinks[i].className = tablinks[i].className.replace(
+						" active", "");
+			}
+			document.getElementById(optName).style.display = "block";
+			evt.currentTarget.className += " active";
+		}
+
+		function overlayOn(mytext) {
+			document.getElementById("overlay").style.display = "block";
+			switch(mytext) {
+			case 'linear':
+				document.getElementById("overlaytext").innerHTML = "Linear Function Settings";
+				document.getElementById("lp1").innerHTML = "Function Name";
+				document.getElementById("p1").type = "text";
+				document.getElementById("lp2").innerHTML = "Slope";
+				document.getElementById("p2").type = "number";
+				document.getElementById("lp3").innerHTML = "Baseline";
+				document.getElementById("p3").type = "number";
+				document.getElementById("p8").value = "LINEAR";
+				break;
+			case 'sine':
+				document.getElementById("overlaytext").innerHTML = "Sine Function Settings";
+				document.getElementById("lp1").innerHTML = "Function Name";
+				document.getElementById("p1").type = "text";
+				document.getElementById("lp2").innerHTML = "Baseline";
+				document.getElementById("p2").type = "number";
+				document.getElementById("lp3").innerHTML = "Period";
+				document.getElementById("p3").type = "number";
+				document.getElementById("lp4").innerHTML = "Amplitude";
+				document.getElementById("p4").type = "number";
+				document.getElementById("p8").value = "SIN";
+				break;
+			}
+		}
+
+		function overlayOff() {
+			document.getElementById("overlay").style.display = "none";
+			funObj = { 
+				SensorID: document.getElementById("p1").value,
+				SensorType: document.getElementById("p8").value,
+				SensorParams: [
+					parseFloat(document.getElementById("p2").value).toFixed(2),
+					parseFloat(document.getElementById("p3").value).toFixed(2),
+					parseFloat(document.getElementById("p4").value).toFixed(2),
+					parseFloat(document.getElementById("p5").value).toFixed(2),
+					parseFloat(document.getElementById("p6").value).toFixed(2),
+					parseFloat(document.getElementById("p7").value).toFixed(2)]
+			};
+			funList.push(funObj);
+			//funList.push(JSON.stringify(funObj));
+			printList();
+			clearParams();
+			createSimulation();
+		}
+
+		function clearParams() {
+			document.getElementById("lp1").innerHTML = "";
+			document.getElementById("p1").type = "hidden";
+			document.getElementById("p1").value = "";
+			document.getElementById("lp2").innerHTML = "";
+			document.getElementById("p2").type = "hidden";
+			document.getElementById("p2").value = "0.0";
+			document.getElementById("lp3").innerHTML = "";
+			document.getElementById("p3").type = "hidden";
+			document.getElementById("p3").value = "0.0";
+			document.getElementById("lp4").innerHTML = "";
+			document.getElementById("p4").type = "hidden";
+			document.getElementById("p4").value = "0.0";
+			document.getElementById("lp5").innerHTML = "";
+			document.getElementById("p5").type = "hidden";
+			document.getElementById("p5").value = "0.0";
+			document.getElementById("lp6").innerHTML = "";
+			document.getElementById("p6").type = "hidden";
+			document.getElementById("p6").value = "0.0";
+			document.getElementById("lp7").innerHTML = "";
+			document.getElementById("p7").type = "hidden";
+			document.getElementById("p7").value = "0.0";
+			document.getElementById("p8").value = "";
+		}
+		
+		var acc = document.getElementsByClassName("accordion");
+		var i;
+
+		function printList() {
+			var x = "";
+			if(funList.length > 0) {
+				for(i in funList){
+					x += JSON.stringify(funList[i]) + "<br>";
+				}
+				document.getElementById("demo").innerHTML = x;
+			}
+		}
+		
+		function createSimulation() {
+			var tId = document.getElementById("topicId").value;
+			var qId = document.getElementById("queueId").value;
+			
+			simulationdetail = {
+				isValid: true,
+				topicId: tId,
+				queueId: qId,
+				sensors: funList
+			}
+			
+			document.getElementById("simJSON").value = encodeURIComponent(JSON.stringify(simulationdetail));
+			
+			//var simulation = new Simulation(simulationdetail);
+			/*var simulation = new Simulation(
+				{
+					isValid: true,
+					topicId: 'linear',
+					queueId: 'value',
+					sensors: [0,0,0,0,0]
+				}		
+			);
+			
+			console.log('before saving');
+			
+			simulation.save(function (err, simulation) {
+			    if (err) {
+			      console.log('Err: Cannot add ' + simulation)
+			    } else { console.log('New Simulation: ' + simulation); }
+			});*/
+		}
+				
+		for (i = 0; i < acc.length; i++) {
+			acc[i].addEventListener("click", function() {
+				this.classList.toggle("active");
+				var panel = this.nextElementSibling;
+				if (panel.style.maxHeight) {
+					panel.style.maxHeight = null;
+				} else {
+					panel.style.maxHeight = panel.scrollHeight + "px";
+				}
+			});
+		}
+	</script>
+</body>
+</html>
