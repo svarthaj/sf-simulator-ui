@@ -38,6 +38,22 @@ node app.js
 ```
 By default, the server will run on port ```8000```, but this can be configured. To check if everything is running visit ```localhost:8000```.
 
+## Project Details
+This section is reserved for explaining the file organization of the Project.
+
+### How to add new functions
+Since this interface works on top of the (SF-Simulator)[https://github.com/svarthaj/sf-simulator] all the functions defined in the UI must be compatible with the ones defined in the simulator. Ideally, this coupling should be automatic, but for now it must be done manually by the programmer.
+
+Therefore, to add new functions some details must be taken in consideration:
+1. Add the function details to a switch case inside the function ```overlayOn``` defined in ```views/index.ejs```.
+1. The order of the function attributes must be the same as defined on the Simulator.**
+
+### To-do's
+1. Add the rest of the functions.
+1. Polish the list of current added functions (e.g. adding editing capabilities).
+1. Implement some constraints for Topic and Queue name. Ideally it should check in the DB to see what names have been used. This is important to avoid function overlapping.
+1. Implement the *Manage* tab. This should allow the user to see every simulation in the DB and give them the option to Start/Stop publishing data with each one of them.
+
 ## Built With
 
 * [Express](https://expressjs.com/) - Web Framework for JS
