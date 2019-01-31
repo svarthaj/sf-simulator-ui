@@ -49,10 +49,11 @@ Therefore, to add new functions some details must be taken in consideration:
 1. The order of the function attributes must be the same as defined on the Simulator.**
 
 ### To-do's
-1. Add the rest of the functions.
-1. Polish the list of current added functions (e.g. adding editing capabilities).
-1. Implement some constraints for Topic and Queue name. Ideally it should check in the DB to see what names have been used. This is important to avoid function overlapping.
 1. Implement the *Manage* tab. This should allow the user to see every simulation in the DB and give them the option to Start/Stop publishing data with each one of them.
+1. Polish the list of current added functions (e.g. adding editing capabilities).
+1. Add the rest of the functions.
+1. Implement some constraints for Topic and Queue name. Ideally it should check in the DB to see what names have been used. This is important to avoid function overlapping.
+
 
 ## Built With
 
