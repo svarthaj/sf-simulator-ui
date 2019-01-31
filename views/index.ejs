@@ -23,7 +23,7 @@
 			<div id="overlay-text">
 			<p> <label id="overlaytext"></label>
 			<p> <label id="lp1" for="param1">Function Name</label>
-				<input type="text"  id="p1" name="param1" placeholder="Function name" /></p>
+				<input type="text"  id="p1" name="param1" placeholder="Function name" required /></p>
 			<p> <label id="lp2" for="param2"></label>
 				<input type="hidden" id="p2" name="param2" min="-999" max="999" step="0.1" value="0.0"></p>
 			<p> <label id="lp3" for="param3"></label>
@@ -37,7 +37,8 @@
 			<p> <label id="lp7" for="param7"></label>
 				<input type="hidden"  id="p7" name="param7" min="-999" max="999" step="0.1" value="0.0"></p>
 			<p> <input type="hidden"  id="p8" name="param8"></p>
-			<p> <button class="submit" onClick="overlayOff()">Add Function</button> </p>
+			<p> <button class="submit" onClick="overlayOff('create')">Add Function</button>
+			 		<button class="submit" onClick="overlayOff('cancel')">Cancel</button> </p>
 			</div>
 		</div>
 
@@ -46,8 +47,8 @@
 				<h3>Create New Simulation</h3>
 				<p>Enter the name of your topic and select functions</p>
 				<p>
-					<b>Topic Name </b><input type="text" id="topicId" placeholder="MyFunction" />
-					<b>Queue </b><input type="text" id="queueId" placeholder="Value" />
+					<b>Topic Name </b><input type="text" id="topicId" form="newsim" placeholder="MyFunction" required/>
+					<b>Queue </b><input type="text" id="queueId" form="newsim" placeholder="Value" required/>
 				</p>
 				<button class="accordion">Math</button>
 				<div class="panel">
@@ -59,14 +60,14 @@
 				<button class="accordion">Misc</button>
 				<div class="panel">
 					<div class="btn-group">
-						<button>Outlier</button>
-						<button>Noise</button>
+						<button onClick="overlayOn('outlier')">Outlier</button>
+						<button onClick="overlayOn('noise')">Noise</button>
 					</div>
 				</div>
 				<button class="accordion">Time Series</button>
 				<div class="panel">
 					<div class="btn-group">
-						<button>Time Series</button>
+						<button onClick="overlayOn('timeseries')">Time Series</button>
 					</div>
 				</div>
 				<p><input type="submit" form="newsim" value="Create Simulation"></p>
@@ -125,33 +126,88 @@
 				document.getElementById("p1").type = "text";
 				document.getElementById("lp2").innerHTML = "Baseline";
 				document.getElementById("p2").type = "number";
-				document.getElementById("lp3").innerHTML = "Period";
+				document.getElementById("lp3").innerHTML = "Period (sec)";
 				document.getElementById("p3").type = "number";
 				document.getElementById("lp4").innerHTML = "Amplitude";
 				document.getElementById("p4").type = "number";
 				document.getElementById("p8").value = "SIN";
 				break;
+			case 'outlier':
+				document.getElementById("overlaytext").innerHTML = "Outlier Function Settings";
+				document.getElementById("lp1").innerHTML = "Function Name";
+				document.getElementById("p1").type = "text";
+				document.getElementById("lp2").innerHTML = "Baseline";
+				document.getElementById("p2").type = "number";
+				document.getElementById("lp3").innerHTML = "Outlier Range";
+				document.getElementById("p3").type = "number";
+				document.getElementById("p3").min = "0";
+				document.getElementById("lp4").innerHTML = "Outlier Probability";
+				document.getElementById("p4").type = "number";
+				document.getElementById("p4").max = "1";
+				document.getElementById("p4").min = "0";
+				document.getElementById("p8").value = "OUTLIER";
+				break;
+			case 'noise':
+				document.getElementById("overlaytext").innerHTML = "Noise Function Settings";
+				document.getElementById("lp1").innerHTML = "Function Name";
+				document.getElementById("p1").type = "text";
+				document.getElementById("lp2").innerHTML = "Baseline";
+				document.getElementById("p2").type = "number";
+				document.getElementById("lp3").innerHTML = "Noise Range";
+				document.getElementById("p3").type = "number";
+				document.getElementById("p3").min = "0";
+				document.getElementById("p8").value = "NOISE";
+				break;
+			case 'timeseries':
+				document.getElementById("overlaytext").innerHTML = "Time series Function Settings";
+				document.getElementById("lp1").innerHTML = "Function Name";
+				document.getElementById("p1").type = "text";
+				document.getElementById("lp2").innerHTML = "Baseline";
+				document.getElementById("p2").type = "number";
+				document.getElementById("lp3").innerHTML = "Baseline Increment";
+				document.getElementById("p3").type = "number";
+				document.getElementById("lp4").innerHTML = "Seasonal Growth (cycles)";
+				document.getElementById("p4").type = "number";
+				document.getElementById("p4").step = "1";
+				document.getElementById("p4").min = "0";
+				document.getElementById("lp5").innerHTML = "Seasonal Decay (cycles)";
+				document.getElementById("p5").type = "number";
+				document.getElementById("p5").step = "1";
+				document.getElementById("p5").min = "0";
+				document.getElementById("lp6").innerHTML = "Season Length (full cycles)";
+				document.getElementById("p6").type = "number";
+				document.getElementById("p6").step = "1";
+				document.getElementById("p6").min = "0";
+				document.getElementById("lp7").innerHTML = "Trend Length (steps)";
+				document.getElementById("p7").type = "number";
+				document.getElementById("p7").step = "1";
+				document.getElementById("p7").min = "0";
+				document.getElementById("p8").value = "TIMESERIES";
+				break;
 			}
 		}
 
-		function overlayOff() {
+		function overlayOff(action) {
 			document.getElementById("overlay").style.display = "none";
-			funObj = { 
-				SensorID: document.getElementById("p1").value,
-				SensorType: document.getElementById("p8").value,
-				SensorParams: [
-					parseFloat(document.getElementById("p2").value).toFixed(2),
-					parseFloat(document.getElementById("p3").value).toFixed(2),
-					parseFloat(document.getElementById("p4").value).toFixed(2),
-					parseFloat(document.getElementById("p5").value).toFixed(2),
-					parseFloat(document.getElementById("p6").value).toFixed(2),
-					parseFloat(document.getElementById("p7").value).toFixed(2)]
-			};
-			funList.push(funObj);
-			//funList.push(JSON.stringify(funObj));
-			printList();
-			clearParams();
-			createSimulation();
+			if (action == 'create') {
+				funObj = {
+					SensorID: document.getElementById("p1").value,
+					SensorType: document.getElementById("p8").value,
+					SensorParams: [
+						parseFloat(document.getElementById("p2").value).toFixed(2),
+						parseFloat(document.getElementById("p3").value).toFixed(2),
+						parseFloat(document.getElementById("p4").value).toFixed(2),
+						parseFloat(document.getElementById("p5").value).toFixed(2),
+						parseFloat(document.getElementById("p6").value).toFixed(2),
+						parseFloat(document.getElementById("p7").value).toFixed(2)]
+				};
+				funList.push(funObj);
+				printList();
+				clearParams();
+				createSimulation();
+			} else {
+				clearParams();
+			}
 		}
 
 		function clearParams() {
@@ -167,18 +223,27 @@
 			document.getElementById("lp4").innerHTML = "";
 			document.getElementById("p4").type = "hidden";
 			document.getElementById("p4").value = "0.0";
+			document.getElementById("p4").step = "0.1";
+			document.getElementById("p4").max = "999";
+			document.getElementById("p4").min = "-999";
 			document.getElementById("lp5").innerHTML = "";
 			document.getElementById("p5").type = "hidden";
 			document.getElementById("p5").value = "0.0";
+			document.getElementById("p5").step = "0.1";
+			document.getElementById("p5").min = "-999";
 			document.getElementById("lp6").innerHTML = "";
 			document.getElementById("p6").type = "hidden";
 			document.getElementById("p6").value = "0.0";
+			document.getElementById("p6").step = "0.1";
+			document.getElementById("p6").min = "-999";
 			document.getElementById("lp7").innerHTML = "";
 			document.getElementById("p7").type = "hidden";
 			document.getElementById("p7").value = "0.0";
+			document.getElementById("p7").step = "0.1";
+			document.getElementById("p7").min = "-999";
 			document.getElementById("p8").value = "";
 		}
-		
+
 		var acc = document.getElementsByClassName("accordion");
 		var i;
 
@@ -191,39 +256,21 @@
 				document.getElementById("demo").innerHTML = x;
 			}
 		}
-		
+
 		function createSimulation() {
 			var tId = document.getElementById("topicId").value;
 			var qId = document.getElementById("queueId").value;
-			
+
 			simulationdetail = {
 				isValid: true,
 				topicId: tId,
 				queueId: qId,
 				sensors: funList
 			}
-			
+
 			document.getElementById("simJSON").value = encodeURIComponent(JSON.stringify(simulationdetail));
-			
-			//var simulation = new Simulation(simulationdetail);
-			/*var simulation = new Simulation(
-				{
-					isValid: true,
-					topicId: 'linear',
-					queueId: 'value',
-					sensors: [0,0,0,0,0]
-				}		
-			);
-			
-			console.log('before saving');
-			
-			simulation.save(function (err, simulation) {
-			    if (err) {
-			      console.log('Err: Cannot add ' + simulation)
-			    } else { console.log('New Simulation: ' + simulation); }
-			});*/
 		}
-				
+
 		for (i = 0; i < acc.length; i++) {
 			acc[i].addEventListener("click", function() {
 				this.classList.toggle("active");
