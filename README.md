@@ -46,7 +46,7 @@ Since this interface works on top of the (SF-Simulator)[https://github.com/svart
 
 Therefore, to add new functions some details must be taken in consideration:
 1. Add the function details to a switch case inside the function ```overlayOn``` defined in ```views/index.ejs```.
-1. The order of the function attributes must be the same as defined on the Simulator.**
+1. The order of the function attributes must be the same as defined on the Simulator.
 
 ### To-do's
 1. Implement the *Manage* tab. This should allow the user to see every simulation in the DB and give them the option to Start/Stop publishing data with each one of them.
@@ -63,6 +63,6 @@ Therefore, to add new functions some details must be taken in consideration:
 
 ## Authors
 
-* **Mathias Mormul** - *Project Leader* -
+* **Mathias Mormul** - *Project Leader* - [Mormulms](https://github.com/mormulms)
 * **Lucas Leal** - *Initial work* - [Svarthaj](https://github.com/Svarthaj)
 
