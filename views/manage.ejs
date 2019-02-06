@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang=”en”>
+
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1" charset=”UTF-8”>
+<title>Function Simulator</title>
+<link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+<body>
+<div style="padding-left: 16px">
+	<h1>Function Simulator</h1>
+</div>
+
+<div>
+  <div class="topnav">
+   <a href="/">Home</a>
+   <a href="/create">Create</a>
+   <a class="active" href="/manage">Manage</a>
+</div>
+
+<div class="container">
+ <div class="fixed">
+	 <% for(var i=0; i < simlist.length; i++) { %>
+		 <% if (simlist[i].isValid) { %>
+			 <button class="accordion" style="background-color:#aefcbc"><%= simlist[i].topicId %>.<%= simlist[i].queueId %></button>
+		 <% } else { %>
+			 <button class="accordion" style="background-color:#fcb4ae"><%= simlist[i].topicId %>.<%= simlist[i].queueId %></button>
+		 <% } %>
+		 <div class="panel">
+			 <% for(var j=0; j < simlist[i].sensors.length; j++) { %>
+				 <p><%= simlist[i].sensors[j].SensorID %>.<%= simlist[i].sensors[j].SensorType %></p>
+			 <% }; %>
+			 <form method="post">
+				<input type="hidden" name="simulation" value=<%= simlist[i]._id %>>
+				<% if (simlist[i].isValid) { %>
+					<button class="submit" formaction="/simulation_stop">Stop</button>
+			 	<% } else { %>
+					<button class="submit" formaction="/simulation_publish">Start</button>
+			 	<% } %>
+					<button class="submit" formaction="/simulation_delete">Delete</button>
+			</form>
+		 </div>
+	 <% }; %>
+ </div>
+</div>
+
+<script type="text/javascript">
+var acc = document.getElementsByClassName("accordion");
+var i;
+for (i = 0; i < acc.length; i++) {
+	acc[i].addEventListener("click", function() {
+		this.classList.toggle("active");
+		var panel = this.nextElementSibling;
+		if (panel.style.maxHeight) {
+			panel.style.maxHeight = null;
+		} else {
+			panel.style.maxHeight = panel.scrollHeight + "px";
+		}
+	});
+}
+</script>
+</body>
+</html>
