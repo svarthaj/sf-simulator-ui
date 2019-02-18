@@ -202,3 +202,19 @@ input[type=text] {
 input[type=text]:focus {
     border-color:#ccc;
 }
+
+.button-link a:link, a:visited {
+    background-color: #f1f1f1;
+    border: .1px solid #ddd;
+    color: black;
+    padding: 1px 5px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+}
+
+.button.link a:hover, a:active {
+  background-color: #ddd;
+}

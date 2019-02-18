@@ -38,6 +38,9 @@
 					<button class="submit" formaction="/simulation_publish">Start</button>
 			 	<% } %>
 					<button class="submit" formaction="/simulation_delete">Delete</button>
+					<div class="button-link">
+						<a href="http://192.168.209.202:8888/sources/1/chronograf/data-explorer?query=SELECT%20%22<%= simlist[i].queueId %>%22%20FROM%20%22telegraf%22.%22autogen%22.%22mqtt_consumer%22%20WHERE%20time%20%3E%20now%28%29%20-%2015m%20AND%20%22topic%22%3D%27<%= simlist[i].topicId %>%27" target="_blank">Data Visualization</a>
+					</div>
 			</form>
 		 </div>
 	 <% }; %>
